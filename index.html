@@ -4,12 +4,13 @@ carousel: true
 video: true
 dark-theme: true
 home: true
-hero-title: It's time to fix Democracy.<br><small class="smallHero">Vote to <span class="smallHeroEmphasis">Flux The System!</span></small>
-hero-copy: 'When did our politics become so broken? Things must change. Flux is your
+hero-title: It's time to fix Democracy.<br><small class="smallHero">Vote to <span class="smallHeroEmphasis bold">Flux The System!</span></small>
+hero-copy: |
+  <em>Flux is Australia's <a href='/transparency/' style="text-decoration: underline;">most transparent political party</a>.</em><br><br>
+  When did our politics become so broken? Things must change. Flux is your
   way to participate directly in parliament. Empowering people in government decisions
   directly through technology. Let’s break up the party politics, end the gridlock
   and return the power to where it belongs - you.
-'
 
 hero-action: Become a Member
 why-flux-title: Why Australia needs Flux
@@ -88,11 +89,24 @@ social-media:
         <p class="h3 sm-h2 h-font light mb4 silver letter-spacing-2 line-height-4">
           {{ page.hero-copy }}
         </p>
-        <div class="inline-block">
-          <a href="{{site.baseurl}}/signup" class="btn btn-primary h2 letter-spacing-1 border-bottom inline-block">
-            {{ page.hero-action }}
-          </a>
-          <span class="gray h3 block caps mt1 letter-spacing-1">Membership is free for life</span>
+        <div class="md-flex">
+          <div class="lg-col-6 md-col-12">
+            <a href="{{site.baseurl}}/signup/?utm_source=mainsite&utm_medium=web&utm_campaign={{ page.utm_campaign | default: 'none' }}&utm_content=hero~{{ page.url | slugify }}" class="btn btn-primary h2 letter-spacing-1 border-bottom inline-block">
+              {{ page.hero-action }}
+            </a>
+            <span class="gray h3 block caps mt1 letter-spacing-1">Membership is free for life</span>
+          </div>
+          <!-- [TS] HTV announcement is over -->
+          <div class="lg-col-6 md-col-12 light silver align-top md-mt0 mt3 md-pl2">
+            <h2 class="mt0 pt0">Most recent post: <a href="#announcements">(see all)</a></h2>
+            {% for post in site.posts limit:1 %}<a class="underline" href="{{ post.url }}">{{ post.title }}</a> <small>&mdash; {{ post.date | date: "%Y-%m-%d" }}</small><br>
+              {% if post.summary %}
+                {{post.summary}}
+              {% else %}
+                {{post.excerpt}}
+              {% endif %}
+            {% endfor %}
+          </div>
         </div>
         <div class="md-hide lg-hide silver">
           <h5 class="muted caps mt3">Registered Members</h5>
@@ -107,24 +121,58 @@ social-media:
   </div>
 </section>
 
-
-<!-- ANNOUNCEMENT SECTION -->
-<!--<section id="js-announcement-home" class="py4 sm-pr4 bg-white dark-gray height-30vh">-->
-<!--  <div class="max-width-4 mx-auto px2 md-px3">-->
-<!--    <div id="js-announcement-content" class="">-->
-<!--      <div class="mb4">-->
-<!--        <h1 id="js-callout-heading" class="h0 mb3">Announcing: The Flux Startup</h1>-->
-<!--        <p id="js-callout-body" class="h3 sm-h2 h-font light mb4 gray letter-spacing-2 line-height-4">-->
-<!--          We're excited to announce a major development for the Flux movement:-->
-<!--          a startup that will drive the Flux system globally and usher in a new era of democracy.-->
-<!--        </p>-->
-<!--      </div>-->
-<!--      <a id="js-callout-link" href="http://www.thefluxstartup.com" class="h2 letter-spacing-1 accent border-bottom inline-block">-->
-<!--        Read the announcement-->
-<!--      </a>-->
-<!--    </div>-->
-<!--  </div>-->
+<!--&lt;!&ndash; ANNOUNCEMENT SECTION &ndash;&gt;-->
+<!--<section id="js-announcement-home" class="py2 sm-pr4 bg-near-black br0 min-height-05vh fixed right-0 left-0 bottom-0 z3 col-12 border-top">-->
+  <!--<div class="" style="width: 100vw; padding-left: 5vw; padding-right: 5vw">-->
+    <!--<div id="js-announcement-content" class="white">-->
+      <!--<div class="md-flex flex-end">-->
+        <!--<a href="https://fundrazr.com/fluxpartynsw?utm_source=mainsite_banner" class="btn btn-primary col-12 md-col-4 center inline-block">Donate Now (NSW)</a>-->
+        <!--<div class="my0 py0 pt1 col-12 md-col-4 align-bottom h2 xs-hide sm-hide" style="text-align: center;">Next Milestone</div>-->
+        <!--<a href="/signup/?utm_source=mainsite&utm_medium=web&utm_campaign={{ page.utm_campaign | default: 'none' }}&utm_content=ann-banner~{{ page.url | slugify }}" class="btn btn-outline col-12 md-col-4 center inline-block xs-hide sm-hide">Join Flux</a>-->
+      <!--</div>-->
+      <!--<div class="rounded mt1 bg-accent-muted white relative" style="min-height: 2rem; height: 2rem" id="donation-progress-outer">-->
+        <!--<div class="rounded inline-block absolute top-0 align-middle bg-accent min-h-100"-->
+             <!--style="width: 50%; height: 2rem;" id="donation-progress-inner">-->
+        <!--</div>-->
+        <!--<p id='donation-status-text' class="my0 sm-h4 md-h3 lg-h2" style="position: relative; top: 50%; transform: translateY(-50%); text-align: center">-->
+          <!--(loading)-->
+        <!--</p>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
 <!--</section>-->
+
+<!-- CANDIDATES -->
+{% if site.candidates-federal-2019 %}
+<section class="bg-near-white dark-gray pt4 pb3 sm-pr4 col-12 overflow-hidden">
+  <div class="max-width-4 mx-auto px2 sm-px3">
+    {% include components/main-heading.html
+      text="Meet the lead candidates for the Federal Election"
+      font-size="h0 line-height-2"
+      font-weight="bold" %}
+    {% include components/hr-muted.html classes="mb3"%}
+      <div class="mb3 mxn2">
+        <div id="js-candidates">
+          {% assign candidates = site.candidates-federal-2019 | where: "lead", true %}
+          {% for candidate in candidates %}
+            {% capture snippet %} {{ candidate.bio | first | truncatewords: 50 }} {% endcapture %}
+            {% include candidates/candidate-card-state.html
+               region=candidate.region
+               house=candidate.house
+               url=candidate.url
+               title=candidate.title
+               image=candidate.image
+               bio=snippet %}
+          {% endfor %}
+        </div>
+      </div>
+      <div class="right-align mt2">
+        <a href="{{site.baseurl}}/federal/candidates/2019" class="h3 border-bottom">See all candidates</a>
+      </div>
+  </div>
+</section>
+{% endif %}
+
 
 {% if page.video %}
 <!-- VIDEO section here -->
@@ -148,7 +196,7 @@ social-media:
           <div class="mb3">
             <a data-sumome-share-id="b6279140-56da-424e-9e95-54d26518c49d"></a>
           </div>
-        <a href="{{site.baseurl}}/signup" class="btn btn-primary h2">
+        <a href="{{site.baseurl}}/signup/?utm_source=mainsite&utm_medium=web&utm_campaign={{ page.utm_campaign | default: 'none' }}&utm_content=nutshell~{{ page.url | slugify }}" class="btn btn-primary h2">
           Join Now!
         </a>
       </div>
@@ -235,7 +283,7 @@ social-media:
 
 
   <!-- Posts -->
-  <section class="height-40vh py2 sm-py4 relative bg-dark-gray px2 md-px2">
+  <section id="announcements" class="height-40vh py2 sm-py4 relative bg-dark-gray px2 md-px2">
     <div class="max-width-4 mx-auto relative z2sm-pr4">
       <div class="lg-flex mxn2">
         <div class="lg-col-12 px2">
@@ -260,9 +308,12 @@ social-media:
                 </div>
                 {% endfor %}
                 <h1 class="h1 regular">Older Announcements</h2>
-                  {% for post in site.posts offset:1 %}
+                  {% for post in site.posts offset:1 limit:10 %}
                   <h3 class="h3 regular"><a class="underline" href="{{ post.url }}">{{ post.title }}</a> <small>&mdash; {{ post.date | date: "%Y-%m-%d" }}</small></h1>
                 {% endfor %}
+                <div class="right-align mt2">
+                  <a href="{{site.baseurl}}/blog" class="h3 border-bottom">See all announcements</a>
+                </div>
               </div>
             </div>
           </div>
@@ -309,7 +360,7 @@ social-media:
         </p>
       </div>
       <div class="gray">
-        <a href="{{site.baseurl}}/signup"
+        <a href="{{site.baseurl}}/signup/?utm_source=mainsite&utm_medium=web&utm_campaign={{ page.utm_campaign | default: 'none' }}&utm_content=fed-up~{{ page.url | slugify }}"
            class="h3 sm-h2 link-reset border-bottom inline-block accent">
           {{ page.second-callout-action }}
         </a>

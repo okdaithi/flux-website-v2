@@ -9,6 +9,14 @@ collections:
     title: Candidates
     output: true
     permalink: "/candidates/:path/"
+  candidates-nsw-2019:
+    title: NSW Candidates 2019
+    output: true
+    permalink: "/nsw/candidates/2019/:name/"
+  candidates-federal-2019:
+    title: Federal Candidates 2019
+    output: true
+    permalink: "/federal/candidates/2019/:name/"
   posts:
     title: Posts
     output: true
@@ -24,11 +32,18 @@ collections:
   wa-candidates:
     title: WA Candidates
     output: true
+defaults:
+  - scope:
+      path: ""
+      type: "candidates-nsw-2019"
+    values:
+      layout: "candidate-v2"
+  - scope:
+      type: "candidates-federal-2019"
+    values:
+      layout: "candidate-v2"
 email: website@voteflux.org
-description: 'Flux is a new political party designed to connect Australians directly
-  to Parliament and change politics forever!
-
-'
+description: 'Flux is a new political party designed to connect Australians directly to Parliament and change politics forever!'
 baseurl:
 url: https://voteflux.org
 icon_path: img/social-icons/
@@ -37,28 +52,44 @@ base-color: "#0b0b0e"
 meetups: false
 future: true
 candidates: false
-countdown: true
+countdown: false
 social-media:
 - name: facebook
   url: https://facebook.com/voteflux.org
+- name: discord
+  url: https://discord.io/FluxParty
+- name: slack
+  url: https://voteflux.org/slack
 - name: twitter
   url: https://twitter.com/voteflux
 - name: reddit
   url: https://www.reddit.com/r/voteflux
+- name: github
+  url: https://github.com/voteflux
 markdown: kramdown
 permalink: pretty
 incremental: true
 exclude:
-- node_modules
-- README.md
-- package.json
-- gulpfile.js
-- react-signup
-- to-do
-- signup.html
-- npm-debug.log
-- elm-stuff
-- elmSrc
+  - README.md
+  - package.json
+  - gulpfile.js
+  - node_modules
+  - react-signup
+  - to-do
+  - signup.html
+  - npm-debug.log
+  - elm-stuff
+  - elmSrc
+  - .bundle-gems
+  - .bundle
+  - .git
+  - _site
+  - '*.sh'
+  - 'Gemfile*'
+  - elm-package.json
+  - package-lock.json
+  - yarn.lock
+  - tsconfig.json
 include:
   - _record_login_param.html
   - _redirects
@@ -66,3 +97,5 @@ plugins:
 - jekyll-angular
 redirects: true
 strict_front_matter: true
+
+

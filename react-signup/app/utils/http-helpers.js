@@ -5,9 +5,9 @@ var _ = require('lodash');
 import FormContainer from '../containers/form-container'
 
 
-const prodServer = 'https://api.voteflux.org';
+const prodServer = 'https://prod.v1.api.flux.party';
 
-let useDevDefault = (window.location.hostname === 'localhost' || _.includes(location.hostname, "deploy-preview"));
+let useDevDefault = (window.location.hostname === 'localhost' || _.includes(location.hostname, "deploy-preview") || location.port.length >= 4);
 let useLocalDev = (window.location.hostname === '127.0.0.1')
 let useProdOverride = false;
 
@@ -31,16 +31,16 @@ const flux_api = function(path, useDev){
   } else if (useLocalDev === true) {
     return 'http://localhost:5000/api/v0/' + path;
   } else if (useDev === true) {
-    return 'https://flux-api-dev.herokuapp.com/api/v0/' + path;
+    return 'https://dev.v1.api.flux.party/api/v0/' + path;
   } else if (useDev === false) {
-    return 'https://api.voteflux.org/api/v0/' + path;
+    return prodServer + '/api/v0/' + path;
   }
   return flux_api(path, true);
 }
 
 var HttpHelpers = {
   getMembers: function () {
-    return axios.get( "https://api.voteflux.org/api/v0/getinfo" )
+    return axios.get( prodServer + "/api/v0/getinfo" )
       .then(function (response) {
         return response.data
       })

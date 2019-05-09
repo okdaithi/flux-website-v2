@@ -66,8 +66,8 @@ fluxAnnounce = (function() {
         link: $("#js-callout-link")
       }
       $.ajax({
-        // url: "http://flux-api-dev.herokuapp.com/api/v0/announcement",
-        url: "https://api.voteflux.org/api/v0/announcement",
+        // url: "http://dev.v1.api.flux.party/api/v0/announcement",
+        url: "https://prod.v1.api.flux.party/api/v0/announcement",
         type: 'GET',
         error: function() {
           console.log('error');
@@ -172,7 +172,7 @@ $(document).ready(function() {
       dots: true,
       responsive: [
         {
-          breakpoint: 2000,
+          breakpoint: 5000,
           settings: {
             autoplay: true,
             autoplaySpeed: 4000,
@@ -182,7 +182,7 @@ $(document).ready(function() {
           }
         },
         {
-          breakpoint: 1024,
+          breakpoint: 1250,
           settings: {
             autoplay: true,
             autoplaySpeed: 4000,
@@ -198,7 +198,7 @@ $(document).ready(function() {
             autoplaySpeed: 4000,
             speed: 1000,
             slidesToShow: 1,
-            slidesToScroll: 2
+            slidesToScroll: 1
           }
         },
         {
@@ -261,9 +261,9 @@ $(document).ready(function() {
 
 
   // get member and volenteer info ajax request
-  var getMembers = function() {
+  function getMembers() {
     $.ajax({
-      url: "https://api.voteflux.org/api/v0/getinfo",
+      url: flux_api("api/v0/getinfo") || "https://prod.v1.api.flux.party/api/v0/getinfo",
       data: {
         format: 'json'
       },
@@ -309,10 +309,45 @@ $(document).ready(function() {
       type: 'GET'
     });
   }
+
+  function nextPowerOf10(n) {
+    return Math.pow(10, Math.ceil(Math.log10(n)))
+  }
+
+  function next5kIncrement(n) {
+    return Math.ceil(n/5000)*5000;
+  }
+
+  function setDonationProgressBar(currAmountStr) {
+    let amt = parseFloat(currAmountStr);
+    let nextTarget = next5kIncrement(amt);
+    let pct = Math.round(amt / nextTarget * 100);
+    let msg = "$" + currAmountStr + " of $" + nextTarget + ".00";
+    $("#donation-progress-inner")[0].style['width'] = pct.toString() + "%";
+    $("#donation-status-text").text(msg)
+  }
+
+  function getDonationBannerData() {
+    console.log('getDonationBannerData')
+    $.getJSON({
+      url: "https://prod.v1.api.flux.party/api/v1/fundrazr/current", success: data => {
+        let amtStr = data.campaign.statistics.donationSum;
+        setDonationProgressBar(amtStr)
+      }
+    })
+  }
+
+  function allUpdates() {
+    getMembers()
+    getDonationBannerData()
+  }
+
+
   var mins = 1
   var interval = 1000 * 60 * mins
   getMembers(); //init
-  setInterval(getMembers, interval);
+  getDonationBannerData()
+  setInterval(allUpdates, interval);
 
 
   // footer date
@@ -357,6 +392,9 @@ $(document).ready(function() {
   var fadeUntil = 150;
   var $fading = $('#js-fading');
   var $document = $(document);
+
+  var $donationBar = $('#donation-bar-section');
+
   var faded = false;
   // var contactHeight = $('#contact').outerHeight()
   // var contactPos = $('#contact').offset().top
@@ -382,7 +420,12 @@ $(document).ready(function() {
       $('.js-flux-text-darktheme').css({ fill: "#fff" });
       $("#js-nav-links").addClass('white');
     }
-    $fading.css('opacity',opacity);
+    $fading.css('opacity', opacity);
+
+    if ($donationBar) {
+      var donationOffset = Math.min(0, offset - $donationBar.height() - 200);
+      $donationBar.css({bottom: donationOffset});
+    }
   }
 
   $(window).bind('scroll', onScrollUpdateMenu);

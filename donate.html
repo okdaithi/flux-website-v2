@@ -1,5 +1,5 @@
 ---
-title: Donate
+title: Donate To Flux & Help Shape The Future Of Politics In Australia!
 permalink: "/donate/"
 layout: default
 dark-theme: true
@@ -19,14 +19,55 @@ redirects:
     font-weight="bold" %}
   </div>
 </header>
-<section id="contact" class="bg-light-gray mid-gray py4 sm-pr4">
+<section class="bg-light-gray mid-gray py4 sm-pr4">
   <div class="max-width-4 mx-auto px2 md-px3">
+
+    {% comment %}
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+      var stripe = Stripe("{% if jekyll.environment == 'development' %}pk_test_PmYsKZNGpB2f0dignwQPEBSN006Xw196Bm{% else %}pk_live_YehKrWPQMK4SA3LZgo7ygT3d00tgq4w0lj{% endif %}")
+      function clickedStripePayment() {
+        console.log('clickedStripePayment')
+        stripe.redirectToCheckout({
+          sessionId: 'asdf'
+        }).then(function(result){
+          $("#stripe-error").text(result.error.message)
+        })
+      }
+    </script>
+
+    <div id="stripe-error"></div>
+
+    <a class="btn btn-primary" onclick="clickedStripePayment()">Donate Now!</a>
+
+    <form action="https://{% if jekyll.environment == 'development' %}dev{% else %}prod{% endif %}.v1.api.flux.party/api/v2/submit_stripe" method="POST">
+      <script
+        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key=""
+        data-amount="2500"
+        data-name="Flux"
+        data-description="Donation to Flux"
+        data-locale="auto"
+        data-currency="aud"
+        data-zip-code="true"
+        data-billing-address="true"
+        data-label="Donate with Card"
+        data-image="/img/flux-mark.png"
+      >
+      </script>
+    </form>
+
+    {% endcomment %}
 
     <!-- elm donation widget -->
     <span class="anchor" id="paypal"></span>
     <div id="donationWidgetElm"></div>
     <script src="/js/bundle-donationWidget.js"></script>
     <!-- /elm donation widget -->
+    <hr>
+
+    <a href="https://www.patreon.com/bePatron?u=15590051" data-patreon-widget-type="become-patron-button">Become a Patron!</a><script async src="https://c6.patreon.com/becomePatronButton.bundle.js"></script>
+
     <hr>
 
     <h1>Page Contents</h1>
@@ -44,17 +85,21 @@ redirects:
 
     <h1><span class="anchor" id="info"></span>Donation disclosure and tax info</h1>
 
+    <p><small>It probably goes without saying, but this isn't legal advice and all that. Also the numbers change so it might be out of date.</small></p>
+
     <strong>Please note:</strong> If you donate more than $13,000 total in one year we are <strong>required by
     law</strong> to disclose your name and address to the AEC. We will not be able to accept such donations if we don't
     have those details. Please email us if you'd like to make a large donation.
 
+    <p><strong>NSW:</strong> If you donate more than $1000 in the ~6 months before an election (see NSWEC site for details) you'll need to disclose it to them within 16 weeks, (and we need to disclose it within 21 days).</p>
+
     <p>
-      NB: The first $1500 of the donation are tax deductable.
+      NB: The first $1500 of your donations (across <em>all</em> political parties) for the financial year are tax deductible. [ATO Link](https://www.ato.gov.au/non-profit/gifts-and-fundraising/in-detail/fundraising/claiming-political-contributions-and-gifts/).
     </p>
 
     <p>
       All donations need to come with a name and address (unfortunately) due to reporting laws. Basically we need to
-      ensure any single person doesn't donate more than $13,000 per year.
+      ensure any single person doesn't exceed thresholds.
     </p>
 
     <hr>
@@ -80,8 +125,8 @@ redirects:
       <li>Ether: 0xa3371FA3A533e862782D373DCF8Eb42aE5c33931</li>
       <li>Other: email us (donations@voteflux.org)</li>
     </ul>
-    Please keep in mind the above restrictions around disclosure limits still apply, and you'll still need to email
-    us your name and address. Unless we're holding a fundraiser for something specific we'll hold Bitcoin/Ether <em>as
+    Please keep in mind the above restrictions around disclosure limits still apply, and <strong>you'll still need to email
+    us your name and address</strong>. Unless we're holding a fundraiser for something specific we'll hold Bitcoin/Ether <em>as
     BTC or ETH</em> until we need to spend it, and will spend AUD before crypto.
 
     <hr>
@@ -104,12 +149,7 @@ redirects:
     <!-- disclaimer also goes on dashboard.html verbatim -->
     <small>
       <p>
-        <strong>Disclaimer re donation log:</strong> Donations (as of Sept 2018) are made to the Flux Foundation and tagged for use by different branches.
-        In some cases this means a corresponding donation does not appear on party disclosure statements, or appears as part of a bulk donation from the Flux Foundation.
-        That said, depending on jurisdiction such a donation might appear on the Foundation's disclosure statement.
-        Furthermore, it might not appear on any disclosure statement if those funds are used for general things not directly related to the individual branch (e.g. paying our AWS bill).
-        In any case, be aware this donation log is a best-effort attempt at transparency, not a replacement for, substitute for, or even an indication of our official disclosures.
-        No data on this page regarding donations comes with any guarentee of accuracy.
+        {% include donate/disclaimer.html %}
       </p>
     </small>
 
@@ -118,4 +158,15 @@ redirects:
 
   </div>
 </section>
+
 {% include footer.html %}
+
+<script type="application/javascript">
+  function logDonationPageLoad() {
+    ga('send', 'event', 'donation', 'donation-pageload', { hitValue: 0.0 });
+  }
+
+  window.onload(function(){
+    ga('send', 'event', )
+  })
+</script>

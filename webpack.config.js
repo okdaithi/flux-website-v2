@@ -4,9 +4,15 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
+
+const devMode = process.env.NODE_ENV === "development"
+
+if (devMode) { console.log(">>> WEBPACK RUNNING IN DEV MODE <<<"); }
+
+
 const extractSass = new ExtractTextPlugin({
   filename: "../css/[name].bundle.css",
-  disable: process.env.NODE_ENV === "development"
+  disable: false
 });
 
 // plugins
@@ -37,6 +43,11 @@ const localElmSrc = './elmSrc/';
 const elmSource = __dirname + '/elmSrc/';
 
 
+const elmLoaders = devMode
+  ? [{loader: 'elm-hot-loader'}, {loader: 'elm-webpack-loader'}]
+  : [{loader: 'elm-webpack-loader'}];
+
+
 // TODO - WEBPACK (or other) must handle building sass
 
 
@@ -45,10 +56,12 @@ module.exports = {
   devServer: {
     publicPath: '_site',
     contentBase: path.join(__dirname, "_site"),
+    watchContentBase: true,
     compress: true,
-    port: 9000,
+    port: 9999,
     inline: true,
     hot: true,
+    host: '127.0.0.1',
   },
   entry: {
     reactSignup: ['./react-signup/app/index.js'],
@@ -79,9 +92,7 @@ module.exports = {
       {
         test: /\.elm$/,
         exclude: [/elm-stuff/, /node_modules/, /_site/],
-        use: [{loader: 'elm-hot-loader'}, {
-          loader: 'elm-webpack-loader'
-        }]
+        use: elmLoaders
       },
       {
         test: /\.tsx?$/,
@@ -91,7 +102,8 @@ module.exports = {
       {
         test: /\.scss$/,
         use: extractSass.extract({
-          use: [{
+          use: [
+          {
             loader: "css-loader",
             options: { url: false }
           }, {
